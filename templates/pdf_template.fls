@@ -1,0 +1,6 @@
+PWD /home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates
+INPUT /usr/local/texlive/2022/texmf.cnf
+INPUT /usr/local/texlive/2022/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT /home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex
+OUTPUT pdf_template.log

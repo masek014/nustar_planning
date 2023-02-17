@@ -1,0 +1,44 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.31)  4 DEC 2022 14:39
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**/home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex
+(/home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex
+LaTeX2e <2022-06-01> patch level 5
+L3 programming layer <2022-10-26>
+/home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex:2: Undefined control sequence.
+<argument> \VAR 
+                {cls_path}.\@clsextension 
+l.2 \usepackage
+               {microtype}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: File `{cls_path}.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: 
+/home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex:2: Emergency stop.
+<read *> 
+         
+l.2 \usepackage
+               {microtype}^^M
+*** (cannot \read from terminal in nonstop modes)
+
+ 
+Here is how much of TeX's memory you used:
+ 25 strings out of 475066
+ 722 string characters out of 5778780
+ 340613 words of memory out of 5000000
+ 21530 multiletter control sequences out of 15000+600000
+ 469259 words of font info for 28 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 19i,0n,29p,163b,17s stack positions out of 10000i,1000n,20000p,200000b,200000s
+/home/reed/Documents/Research/NuSTAR/Planning/nustar_planning/templates/pdf_template.tex:2:  ==> Fatal error occurred, no output PDF file produced!
