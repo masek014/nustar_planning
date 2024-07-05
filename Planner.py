@@ -1,11 +1,8 @@
-from __future__ import annotations
-
 import os
 import jinja2
 import pathlib
 import astropy.units as u
 
-from astropy.units import Quantity
 from nustar_pysolar import planning, io 
 
 from .Target import Target
@@ -25,8 +22,8 @@ def get_orbit_list(start: str, end: str) -> list[list]:
 
 def coordinate_conversion(
     nu_intervals: list[list],
-    nu_angles: list[Quantity],
-    nu_centers: list[Quantity]
+    nu_angles: list[u.Quantity],
+    nu_centers: list[u.Quantity]
 ):
     """
     Perform a coordinate conversion using the provided inputs.
@@ -52,7 +49,7 @@ def coordinate_conversion(
         offset = nu_centers[i]
         midTime = (0.5*(orbit[1] - orbit[0]) + orbit[0])
         sky_pos = planning.get_skyfield_position(midTime, offset, load_path='./data', parallax_correction=True)
-        print(f'\nOrbit: {i+1}')
+        print(f'\nOrbit: {i}')
         print(f'Orbit start: {orbit[0]} -> Orbit end: {orbit[1]}')
         print(f'Aim time: {midTime} RA: {sky_pos[0]}, Dec: {sky_pos[1]}')
         # print(f'NuSTAR Roll angle for anti-clockwise rotation of {nu_angles[i]} from SN @ {orbit[0]}: {pa}\n')
@@ -93,6 +90,7 @@ class Planner():
 
     
     def add_orbit(self, orbit: Orbit):
+        
         if orbit.orbit_id not in self.orbit_ids:
             self._orbits.append(orbit)
         else:

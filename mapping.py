@@ -2,7 +2,6 @@ from __future__ import annotations
 import datetime
 import sunpy.map
 import astropy.units as u
-from astropy.units import Quantity
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches # for rectangles in Sunpy V3.1.0, I can't get draw_rectangle() to work
 import numpy as np
@@ -27,31 +26,31 @@ X_MAX = 1200
 Y_MAX = 1200
 
 
-def most_recent_map(_map: str, wavelength: Quantity):
+def most_recent_map(instrument: str, wavelength: u.Quantity) -> sunpy.map.Map:
     """
-    Query and return the most recent _map (of "AIA" or "STEREO") 
+    Query and return the most recent instrument (of "AIA" or "STEREO")
     that Sunpy.Fido can get.
     
     Parameters
     ----------
-    _map : string
+    instrument : string
         The instrument you want the most recent map from. 
-        E.g., _map="aia" or _map="stereo". 
+        E.g., instrument="aia" or instrument="stereo". 
         
     Returns
     -------
     Sunpy generic map.
     """
     
-    if _map.lower() == 'aia':
+    if instrument.lower() == 'aia':
         info = (a.Instrument('aia') & a.Wavelength(wavelength))
         look_back = {'minutes': 30}
-    elif _map.lower() == 'stereo':
+    elif instrument.lower() == 'stereo':
         info = (a.Source('STEREO_A') & a.Instrument('EUVI') & \
                 a.Wavelength(wavelength)) 
         look_back = {'days': 5}
     else:
-        print("Don't know what to do! Please set _map=\"aia\" or \"stereo\".")
+        print("Don't know what to do! Please set instrument=\"aia\" or \"stereo\".")
         
     current = datetime.datetime.now()
     current_date = current.strftime(DT_TIME_FORMAT)
@@ -101,7 +100,7 @@ def plot_map(in_map: sunpy.map, ax: plt.Axes, cmap: str = 'gray', title: str = '
     # plt.colorbar(ax=ax, pad=0.01, shrink=0.85, fraction=0.06, aspect=50)
     
 
-def project_map(in_map, future_time):
+def project_map(in_map: sunpy.map.Map, future_time: str) -> sunpy.map.Map:
     """
     Create a projection of an input map at the given input time.
     
@@ -145,9 +144,16 @@ def project_map(in_map, future_time):
     return out_warp
 
 
-def draw_nustar_fov(in_map, ax, center, angle=0*u.arcsecond,
-    layers=(-100, 0, 100)*u.arcsecond, colors='red', pixscale=None,
-    b_mark_center=True):
+def draw_nustar_fov(
+    in_map: sunpy.map.Map,
+    ax: plt.Axes,
+    center: tuple[float, float],
+    angle: u.Quantity = 0*u.arcsecond,
+    layers: tuple[u.Quantity] = (-100, 0, 100)*u.arcsecond,
+    colors: str | list[str] = 'red',
+    pixscale: float = None,
+    b_mark_center: bool = True
+):
     """
     Draw squares representing NuSTAR's field of view on the current map.
     
@@ -161,22 +167,20 @@ def draw_nustar_fov(in_map, ax, center, angle=0*u.arcsecond,
         The input map on which the squares will be overlaid.
     ax : matplotlib.pyplot axes object
         The axes the NuSTAR fov is to be drawn on.
-    center_x : float
-        The x position, in arcseconds, of the squares' center point.
-    center_y : float
-        The y position, in arcseconds, of the squares' center point.
-    layers : list
+    center : tuple
+        The (x,y) position, in arcseconds, of the squares' center point
+    angle : Quantity
+        Anti-clockwise rotation from Solar north for NuSTAR field of view.
+    layers : tuple
         List of values, in arcseconds, containing the adjustments
         to the side lengths of the drawn squares. Each value results
         in a new square drawn on the map.
-    colors : str or list of str
+    colors : str or tuple of str
         The colors of the drawn squares. If colors is a string,
         then each square will be drawn with that color.
         Otherwise, a list can be provided to customize the color
         of each layer. The index of the color will match the index
         of the layer.
-    angle : int or float
-        Anti-clockwise rotation from Solar north for NuSTAR field of view.
     pixscale : float
         Arcsecond-to-pixel conversion for the original AIA or STEREO map.
         Needed for the NuSTAR field of view rotation.
@@ -249,7 +253,7 @@ def draw_nustar_fov(in_map, ax, center, angle=0*u.arcsecond,
             )
             ax.add_patch(rect)
         
-        angle_str = f'Rotated {angle} Anti-clockwise'
+        angle_str = f'Rotated {angle} anti-clockwise'
 
         # if b_mark_center:
         #     circle = patches.Circle(
@@ -295,7 +299,12 @@ def draw_nustar_fov(in_map, ax, center, angle=0*u.arcsecond,
             t.set_bbox(dict(facecolor='white', alpha=1, edgecolor='red'))
         
 
-def mark_poi(coord: Quantity, ax: plt.Axes, frame: sunpy.map, **kwargs):
+def mark_poi(
+    coord: tuple[u.Quantity, u.Quantity],
+    ax: plt.Axes,
+    frame: sunpy.map,
+    **kwargs
+):
     """
     Plots points of interest on a sunpy map.
     
@@ -321,13 +330,18 @@ def mark_poi(coord: Quantity, ax: plt.Axes, frame: sunpy.map, **kwargs):
     p = ax.plot_coord(sky, **kwargs)
 
 
-def mark_psp(coord: Quantity, ax: plt.Axes, frame: sunpy.map, **kwargs):
+def mark_psp(
+    coord: tuple[u.Quantity, u.Quantity],
+    ax: plt.Axes,
+    frame: sunpy.map,
+    **kwargs
+):
     """
     Plots a square to represent PSP's location.
     
     Parameters
     ----------
-    x,y : list
+    coord : tuple of Quantity
         List of the x and y coordinates of the points of interest.
     ax : matplotlib.pyplot axes object
         The axes to be plotted on.

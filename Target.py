@@ -3,24 +3,21 @@ import astropy.time
 import astropy.units as u
 
 from dataclasses import dataclass
-from astropy.units import Quantity
 
 from . import mapping as maps
 
 
 @dataclass
 class Target():
-
-
     target_id: str
     time_range: tuple[astropy.time.Time]
-    center: Quantity
-    fov: Quantity
-    angle: Quantity
+    center: u.Quantity
+    fov: u.Quantity
+    angle: u.Quantity
     psp: list[tuple] = None
     pois: list[tuple] = None
-    aia_wavelength: Quantity = 94*u.angstrom
-    stereo_wavelength: Quantity = 195*u.angstrom
+    aia_wavelengths: tuple[u.Quantity] = (94, 131) * u.angstrom
+    # stereo_wavelength: u.Quantity = 195*u.angstrom
     comments: list[str] = None
 
 
@@ -63,10 +60,11 @@ class Target():
         )
         axs = []
 
-        satellites = ['aia', 'stereo']
-        wavelengths = [self.aia_wavelength, self.stereo_wavelength]
-        for i, (sat, wavelength) in enumerate(zip(satellites, wavelengths)):
+        # satellites = ['aia', 'stereo']
+        # wavelengths = [self.aia_wavelength, self.stereo_wavelength]
+        for i, wavelength in enumerate(self.aia_wavelengths):
 
+            sat = 'aia'
             satmap = maps.most_recent_map(sat, wavelength)
             projected_satmap = maps.project_map(satmap, self.midtime)
 
@@ -77,7 +75,7 @@ class Target():
 
             ax1 = fig.add_subplot(gs[i,0], projection=satmap)
             maps.plot_map(satmap, ax1, cmap,
-                title=f'Original {sat.capitalize()} Map\n{sat.upper()} ' +
+                title=f'Original {sat.upper()} Map\n{sat.upper()} ' +
                     f'{wavelength.value:.0f} {satmap.date}')
 
             ax2 = fig.add_subplot(gs[i,1], projection=projected_satmap)
@@ -100,12 +98,12 @@ class Target():
 
         if out_dir is not None:
             if hasattr(self, 'orbit'):
-                orbit_id = (self.orbit.orbit_id).lower().replace(' ', '')+'_'
+                orbit_id = (self.orbit.orbit_id).lower().replace(' ', '') + '_'
             else:
                 orbit_id = ''
             target_id = (self.target_id).lower().replace(' ', '')
             date = self.time_range[0].strftime('%Y-%m-%d')
             self.file_path = f'{out_dir}/{date}_{orbit_id}{target_id}.png'
-            maps.plt.savefig(self.file_path, bbox_inches='tight', dpi=240)
+            maps.plt.savefig(self.file_path, dpi=200)
 
         return fig, axs

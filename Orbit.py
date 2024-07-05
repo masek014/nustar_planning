@@ -1,5 +1,6 @@
-import astropy.time
+import matplotlib.pyplot as plt
 
+from astropy.time import Time
 from dataclasses import dataclass
 from .Target import Target
 
@@ -9,17 +10,17 @@ class Orbit():
 
     
     orbit_id: str
-    time_range: tuple[astropy.time.Time]
+    time_range: tuple[Time]
     targets: tuple[Target]
 
 
     @property
-    def start(self) -> astropy.time.Time:
+    def start(self) -> Time:
         return self.time_range[0]
     
 
     @property
-    def end(self) -> astropy.time.Time:
+    def end(self) -> Time:
         return self.time_range[1]
 
 
@@ -45,7 +46,7 @@ class Orbit():
         self.targets = [self.targets[i] for i in s.keys()]
 
 
-    def plot_targets(self, out_dir: str = None) -> tuple:
+    def plot_targets(self, out_dir: str = None) -> tuple[plt.Figure, plt.Axes]:
 
         self._register_targets()
         for i, target in enumerate(self.targets, start=1):
