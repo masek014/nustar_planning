@@ -1,3 +1,8 @@
 __pycache__/
+build/
+*egg-info/
 data/
-planner_example/
+
+examples/planner_example/*
+!examples/planner_example/planner_example.pdf
+!examples/planner_example/2024-07-09_orbit1_target1.png
